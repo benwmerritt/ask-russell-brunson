@@ -1,0 +1,69 @@
+# Ask-Russell-Brunson RAG Configuration - Railway Deployment
+
+knowledge_base:
+  name: "Ask Russell Brunson KB"
+  creator: "Russell Brunson"
+  topic: "Sales funnels, online business growth, and marketing strategies"
+  description: "Searchable RAG over Russell Brunson's funnel and business content"
+  personality: "strategic, funnel-focused, and entrepreneurial"
+
+data_sources:
+  use_source_notes: false
+  use_transcripts: true
+  prefer_transcripts: true
+  transcripts_dir: "/app/transcripts"
+  source_notes_dir: "/app/notes"
+
+embeddings:
+  provider: "openai"
+  model: "text-embedding-3-small"
+  batch_size: 100
+  show_progress: true
+  fallback_model: "all-MiniLM-L6-v2"
+
+chunking:
+  notes_chunk_size: 1800
+  notes_chunk_overlap: 200
+  preserve_sections: true
+  min_chunk_size: 200
+  max_chunk_size: 3000
+  transcript_chunk_minutes: 3
+  transcript_overlap_seconds: 30
+
+search:
+  top_k_initial: 30
+  top_k_final: 15
+  min_relevance_score: 0.5
+  enable_hybrid: true
+  enable_mmr: true
+
+generation:
+  provider: "openai"
+  model: "gpt-4o-mini"
+  temperature: 0.2
+  max_tokens: 2600
+  system_prompt: |
+    You are an AI assistant with access to Russell Brunson's sales funnel and online business content.
+    Provide strategic, funnel-focused guidance on building sales funnels, scaling online businesses, and marketing strategies.
+    Always include a final Sources section with content titles only (no URLs).
+
+chroma:
+  persist_directory: "/app/data/chroma_db"
+  collection_prefix: "russell_brunson"
+  collections:
+    content: "content"
+    concepts: "concepts"
+    metadata: "metadata"
+
+logging:
+  level: "INFO"
+  file: "ask_russell_brunson_rag.log"
+
+mcp:
+  enabled: true
+  name: "ask-russell-brunson"
+
+analytics:
+  track_queries: true
+  track_performance: true
+  export_metrics: false
